@@ -8,6 +8,11 @@ set cpo&vim
 
 packadd matchit
 
+augroup WhatIfDefaults
+  autocmd!
+  autocmd FileType javascript if !exists('b:whatif_command') | let b:whatif_command = 'console.log(%s)' | endif
+augroup END
+
 command! -nargs=* -bang WhatIf call s:WhatIf('<bang>')
 function! s:WhatIf(bang)
   let filetypes = split(&filetype, '\.')
