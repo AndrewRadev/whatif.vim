@@ -1,5 +1,4 @@
-command! -nargs=* -bang -buffer WhatIf call s:WhatIf('<bang>')
-function! s:WhatIf(bang)
+function! whatif#ruby#Run(bang)
   let command = get(b:, 'whatif_command', 'puts %s')
 
   if a:bang == '!'

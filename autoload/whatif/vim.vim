@@ -1,5 +1,4 @@
-command! -nargs=* -bang -buffer WhatIf call s:WhatIf('<bang>')
-function! s:WhatIf(bang)
+function! whatif#vim#Run(bang)
   let command = get(b:, 'whatif_command', 'echomsg %s')
 
   if a:bang == '!'
