@@ -22,13 +22,7 @@ function! whatif#ruby#Run(bang)
       normal! j
     endwhile
 
-    if len(if_line) <= 23
-      let line_description = if_line
-    else
-      let line_description = strpart(if_line, 0, 20)."..."
-    endif
-    let line_description = escape(line_description, '"')
-
+    let line_description = whatif#utils#FormatLine(if_line)
     call append(line('.'), printf(command, "\"WhatIf " . debug_index . ': ' . line_description . '"'))
     normal! j==
     let debug_index += 1

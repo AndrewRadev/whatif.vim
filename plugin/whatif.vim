@@ -13,6 +13,10 @@ augroup WhatIfDefaults
   autocmd FileType javascript if !exists('b:whatif_command') | let b:whatif_command = 'console.log(%s)' | endif
 augroup END
 
+if !exists('g:whatif_truncate')
+  let g:whatif_truncate = 20
+endif
+
 command! -nargs=* -bang WhatIf call whatif#Run('<bang>')
 
 let &cpo = s:keepcpo
