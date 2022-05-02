@@ -17,7 +17,7 @@ if !exists('g:whatif_truncate')
   let g:whatif_truncate = 20
 endif
 
-command! -nargs=* -bang WhatIf call whatif#Run('<bang>')
+command! -nargs=* -bang -range=% WhatIf call whatif#Run('<bang>', <line1>, <line2>)
 
 let &cpo = s:keepcpo
 unlet s:keepcpo

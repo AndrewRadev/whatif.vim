@@ -70,4 +70,66 @@ describe "Ruby" do
       end
     EOF
   end
+
+  it "handles nested if-clauses" do
+    set_file_contents <<~EOF
+      if condition
+        puts "foo"
+      else
+        # Something else
+        if other_condition
+          puts "bar"
+        else
+          puts "baz"
+        end
+      end
+    EOF
+
+    vim.search 'condition'
+    vim.command 'WhatIf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if condition
+        puts "WhatIf 1: if condition"
+        puts "foo"
+      else
+        puts "WhatIf 2: else"
+        # Something else
+        if other_condition
+          puts "WhatIf 3: if other_condition"
+          puts "bar"
+        else
+          puts "WhatIf 4: else"
+          puts "baz"
+        end
+      end
+    EOF
+  end
+
+  it "handles line continuations" do
+    set_file_contents <<~EOF
+      if condition
+        puts "foo"
+      elsif 1 + 1 == 2 &&
+        2 + 2 == 4
+        puts "bar"
+      end
+    EOF
+
+    vim.search 'condition'
+    vim.command 'WhatIf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if condition
+        puts "WhatIf 1: if condition"
+        puts "foo"
+      elsif 1 + 1 == 2 &&
+        2 + 2 == 4
+        puts "WhatIf 2: elsif 1 + 1 == 2 &&"
+        puts "bar"
+      end
+    EOF
+  end
 end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Ruby" do
+describe "Vim" do
   let(:filename) { 'test.vim' }
 
   before :each do
@@ -47,6 +47,68 @@ describe "Ruby" do
         echo "bar"
       else
         echo "baz"
+      endif
+    EOF
+  end
+
+  it "handles nested if-clauses" do
+    set_file_contents <<~EOF
+      if condition
+        echomsg "foo"
+      else
+        " Something else
+        if other_condition
+          echomsg "bar"
+        else
+          echomsg "baz"
+        endif
+      endif
+    EOF
+
+    vim.search 'condition'
+    vim.command 'WhatIf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if condition
+        echomsg "WhatIf 1: if condition"
+        echomsg "foo"
+      else
+        echomsg "WhatIf 2: else"
+        " Something else
+        if other_condition
+          echomsg "WhatIf 3: if other_condition"
+          echomsg "bar"
+        else
+          echomsg "WhatIf 4: else"
+          echomsg "baz"
+        endif
+      endif
+    EOF
+  end
+
+  it "handles line continuations" do
+    set_file_contents <<~EOF
+      if condition
+        echomsg "foo"
+      elseif 1 + 1 == 2 &&
+            \\ 2 + 2 == 4
+        echomsg "bar"
+      endif
+    EOF
+
+    vim.search 'condition'
+    vim.command 'WhatIf'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if condition
+        echomsg "WhatIf 1: if condition"
+        echomsg "foo"
+      elseif 1 + 1 == 2 &&
+            \\ 2 + 2 == 4
+        echomsg "WhatIf 2: elseif 1 + 1 == 2 &&"
+        echomsg "bar"
       endif
     EOF
   end
