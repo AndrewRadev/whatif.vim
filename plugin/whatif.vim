@@ -13,18 +13,7 @@ augroup WhatIfDefaults
   autocmd FileType javascript if !exists('b:whatif_command') | let b:whatif_command = 'console.log(%s)' | endif
 augroup END
 
-command! -nargs=* -bang WhatIf call s:WhatIf('<bang>')
-function! s:WhatIf(bang)
-  let filetypes = split(&filetype, '\.')
-
-  if index(filetypes, 'ruby') >= 0
-    call whatif#ruby#Run(a:bang)
-  elseif index(filetypes, 'vim') >= 0
-    call whatif#vim#Run(a:bang)
-  else
-    call whatif#curly#Run(a:bang)
-  endif
-endfunction
+command! -nargs=* -bang WhatIf call whatif#Run('<bang>')
 
 let &cpo = s:keepcpo
 unlet s:keepcpo
