@@ -21,7 +21,7 @@ endfunction
 
 function whatif#printer#Print(line) dict abort
   let line_description = s:FormatLine(a:line)
-  let output = printf(self.command, "\"WhatIf " . self.index . ': ' . line_description . '"')
+  let output = printf(self.command, "\"Whatif " . self.index . ': ' . line_description . '"')
 
   call append(self.current_lineno, output)
   let self.current_lineno += 1

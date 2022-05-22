@@ -19,24 +19,24 @@ describe "Ruby" do
     EOF
 
     vim.search 'condition'
-    vim.command 'WhatIf'
+    vim.command 'Whatif'
     vim.write
 
     assert_file_contents <<~EOF
       if condition
-        puts "WhatIf 1: if condition"
+        puts "Whatif 1: if condition"
         puts "foo"
       elsif other_condition
-        puts "WhatIf 2: elsif other_condition"
+        puts "Whatif 2: elsif other_condition"
         puts "bar"
       else
-        puts "WhatIf 3: else"
+        puts "Whatif 3: else"
         puts "baz"
       end
     EOF
 
     vim.search 'condition'
-    vim.command 'WhatIf!'
+    vim.command 'Whatif!'
     vim.write
 
     assert_file_contents <<~EOF
@@ -60,12 +60,12 @@ describe "Ruby" do
     vim.command "let g:whatif_truncate = #{"if cond".length}"
 
     vim.search 'condition'
-    vim.command 'WhatIf'
+    vim.command 'Whatif'
     vim.write
 
     assert_file_contents <<~EOF
       if condition(one, two, three, four, five)
-        puts "WhatIf 1: if cond..."
+        puts "Whatif 1: if cond..."
         puts "foo"
       end
     EOF
@@ -86,21 +86,21 @@ describe "Ruby" do
     EOF
 
     vim.search 'condition'
-    vim.command 'WhatIf'
+    vim.command 'Whatif'
     vim.write
 
     assert_file_contents <<~EOF
       if condition
-        puts "WhatIf 1: if condition"
+        puts "Whatif 1: if condition"
         puts "foo"
       else
-        puts "WhatIf 2: else"
+        puts "Whatif 2: else"
         # Something else
         if other_condition
-          puts "WhatIf 3: if other_condition"
+          puts "Whatif 3: if other_condition"
           puts "bar"
         else
-          puts "WhatIf 4: else"
+          puts "Whatif 4: else"
           puts "baz"
         end
       end
@@ -118,16 +118,16 @@ describe "Ruby" do
     EOF
 
     vim.search 'condition'
-    vim.command 'WhatIf'
+    vim.command 'Whatif'
     vim.write
 
     assert_file_contents <<~EOF
       if condition
-        puts "WhatIf 1: if condition"
+        puts "Whatif 1: if condition"
         puts "foo"
       elsif 1 + 1 == 2 &&
         2 + 2 == 4
-        puts "WhatIf 2: elsif 1 + 1 == 2 &&"
+        puts "Whatif 2: elsif 1 + 1 == 2 &&"
         puts "bar"
       end
     EOF

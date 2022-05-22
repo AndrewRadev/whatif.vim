@@ -4,7 +4,7 @@
 
 TODO
 
-Short version: Run `:WhatIf` with the cursor on the start of an if-clause in ruby, vimscript, javascript.
+Short version: Run `:Whatif` with the cursor on the start of an if-clause in ruby, vimscript, javascript.
 
 ## Contributing
 
