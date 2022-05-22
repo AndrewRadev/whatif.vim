@@ -10,16 +10,16 @@ function! whatif#ruby#Run(bang, start_line, end_line) abort
     return
   endif
 
-  let printer = whatif#printer#New(command, a:start_line)
+  let printer = whatif#printer#New(command, a:start_line, a:end_line)
 
-  while printer.lineno <= a:end_line
-    let if_line = trim(getline(printer.lineno))
+  while !printer.Finished()
+    let if_line = trim(getline(printer.current_lineno))
     if if_line !~ '^\%(els\)\=if ' && if_line !~ '^else$'
       call printer.NextLineno()
       continue
     endif
 
-    while getline(printer.lineno) =~ s:continuation_pattern
+    while getline(printer.current_lineno) =~ s:continuation_pattern
       call printer.NextLineno()
     endwhile
 

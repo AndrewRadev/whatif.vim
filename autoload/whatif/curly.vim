@@ -11,10 +11,10 @@ function! whatif#curly#Run(bang, start_line, end_line) abort
     return
   endif
 
-  let printer = whatif#printer#New(command, a:start_line)
+  let printer = whatif#printer#New(command, a:start_line, a:end_line)
 
-  while printer.lineno <= a:end_line
-    let if_line = trim(getline(printer.lineno))
+  while !printer.Finished()
+    let if_line = trim(getline(printer.current_lineno))
     if if_line !~ '^\%(}\s*\)\=\%(else \)\=if ' && if_line !~ '^\%(}\s*\)\=else\%(\s*{\)\=$'
       call printer.NextLineno()
       continue
@@ -24,7 +24,7 @@ function! whatif#curly#Run(bang, start_line, end_line) abort
     let if_line = substitute(if_line, '^}\s*\(.*\)', '\1', '')
     let if_line = substitute(if_line, '\(.\{-}\)\s*{$', '\1', '')
 
-    while getline(printer.lineno) !~ '{\s*$'
+    while getline(printer.current_lineno) !~ '{\s*$'
       call printer.NextLineno()
     endwhile
 

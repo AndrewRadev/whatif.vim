@@ -1,30 +1,37 @@
-function whatif#printer#New(command, start_line) abort
+function whatif#printer#New(command, start_lineno, end_lineno) abort
   return {
-        \ 'index':   1,
-        \ 'command': a:command,
-        \ 'lineno':  a:start_line,
+        \ 'index':          1,
+        \ 'command':        a:command,
+        \ 'current_lineno': a:start_lineno,
+        \ 'end_lineno':     a:end_lineno,
         \
+        \ 'Finished':      function('whatif#printer#Finished'),
         \ 'NextLineno': function('whatif#printer#NextLineno'),
         \ 'Print':      function('whatif#printer#Print'),
         \ }
 endfunction
 
+function! whatif#printer#Finished() dict abort
+  return self.current_lineno >= self.end_lineno
+endfunction
+
 function whatif#printer#NextLineno() dict abort
-  let self.lineno = nextnonblank(self.lineno + 1)
+  let self.current_lineno = nextnonblank(self.current_lineno + 1)
 endfunction
 
 function whatif#printer#Print(line) dict abort
   let line_description = s:FormatLine(a:line)
   let output = printf(self.command, "\"WhatIf " . self.index . ': ' . line_description . '"')
 
-  call append(self.lineno, output)
-  let self.lineno += 1
+  call append(self.current_lineno, output)
+  let self.current_lineno += 1
   let saved_view = winsaveview()
-  exe self.lineno
+  exe self.current_lineno
   normal! ==
   call winrestview(saved_view)
   let self.index += 1
-  let self.lineno += 1
+  let self.current_lineno += 1
+  let self.end_lineno += 1
 endfunction
 
 function! s:FormatLine(line) abort
