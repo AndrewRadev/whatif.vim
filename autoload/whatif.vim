@@ -11,6 +11,6 @@ function! whatif#Run(bang, start_line, end_line)
 endfunction
 
 function! whatif#Undo(command)
-  let command_pattern = printf(a:command, '"Whatif \d\+.*')
+  let command_pattern = printf(a:command, '["'']Whatif \d\+.*')
   keeppatterns exe 'g/^\s*' . command_pattern . '/d'
 endfunction
