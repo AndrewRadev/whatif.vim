@@ -10,7 +10,10 @@ packadd matchit
 
 augroup WhatifDefaults
   autocmd!
-  autocmd FileType javascript if !exists('b:whatif_command') | let b:whatif_command = 'console.log(%s)' | endif
+  autocmd FileType javascript,typescript,javascriptreact,typescriptreact
+        \ if !exists('b:whatif_command') |
+        \   let b:whatif_command = 'console.log(%s)' |
+        \ endif
   autocmd FileType rust if !exists('b:whatif_command') | let b:whatif_command = 'println!(%s);' | endif
 augroup END
 
