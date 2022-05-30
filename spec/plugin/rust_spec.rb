@@ -11,11 +11,11 @@ describe "Rust" do
   it "adds and removes println! statements in a simple case" do
     set_file_contents <<~EOF
       if condition {
-          println!("foo")
+          println!("foo");
       } else if other {
-          println!("bar")
+          println!("bar");
       } else {
-          println!("baz")
+          println!("baz");
       }
     EOF
 
@@ -25,14 +25,14 @@ describe "Rust" do
 
     assert_file_contents <<~EOF
       if condition {
-          println!("Whatif 1: if condition")
-          println!("foo")
+          println!("Whatif 1: if condition");
+          println!("foo");
       } else if other {
-          println!("Whatif 2: else if other")
-          println!("bar")
+          println!("Whatif 2: else if other");
+          println!("bar");
       } else {
-          println!("Whatif 3: else")
-          println!("baz")
+          println!("Whatif 3: else");
+          println!("baz");
       }
     EOF
 
@@ -42,11 +42,11 @@ describe "Rust" do
 
     assert_file_contents <<~EOF
       if condition {
-          println!("foo")
+          println!("foo");
       } else if other {
-          println!("bar")
+          println!("bar");
       } else {
-          println!("baz")
+          println!("baz");
       }
     EOF
   end
@@ -54,12 +54,12 @@ describe "Rust" do
   it "handles nested if-clauses" do
     set_file_contents <<~EOF
       if condition {
-          println!("foo")
+          println!("foo");
       } else {
           if other {
-              println!("bar")
+              println!("bar");
           } else {
-              println!("baz")
+              println!("baz");
           }
       }
     EOF
@@ -70,16 +70,16 @@ describe "Rust" do
 
     assert_file_contents <<~EOF
       if condition {
-          println!("Whatif 1: if condition")
-          println!("foo")
+          println!("Whatif 1: if condition");
+          println!("foo");
       } else {
-          println!("Whatif 2: else")
+          println!("Whatif 2: else");
           if other {
-              println!("Whatif 3: if other")
-              println!("bar")
+              println!("Whatif 3: if other");
+              println!("bar");
           } else {
-              println!("Whatif 4: else")
-              println!("baz")
+              println!("Whatif 4: else");
+              println!("baz");
           }
       }
     EOF
