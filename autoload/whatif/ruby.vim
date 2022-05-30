@@ -13,7 +13,7 @@ function! whatif#ruby#Run(bang, start_line, end_line) abort
   let printer = whatif#printer#New(command, a:start_line, a:end_line)
 
   while !printer.Finished()
-    let if_line = trim(getline(printer.current_lineno))
+    let if_line = printer.GetCurrentLine()
     if if_line !~ '^\%(els\)\=if ' && if_line !~ '^else$'
       call printer.NextLineno()
       continue

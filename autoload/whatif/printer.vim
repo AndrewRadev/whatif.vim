@@ -5,10 +5,21 @@ function whatif#printer#New(command, start_lineno, end_lineno) abort
         \ 'current_lineno': a:start_lineno,
         \ 'end_lineno':     a:end_lineno,
         \
-        \ 'Finished':      function('whatif#printer#Finished'),
-        \ 'NextLineno': function('whatif#printer#NextLineno'),
-        \ 'Print':      function('whatif#printer#Print'),
+        \ 'GetCurrentLine': function('whatif#printer#GetCurrentLine'),
+        \ 'Finished':       function('whatif#printer#Finished'),
+        \ 'NextLineno':     function('whatif#printer#NextLineno'),
+        \ 'Print':          function('whatif#printer#Print'),
         \ }
+endfunction
+
+function! whatif#printer#GetCurrentLine() dict abort
+  let line = getline(self.current_lineno)
+
+  if exists('*trim')
+    return trim(line)
+  else
+    return substitute(substitute(line, '^\_s\+', '', ''), '\_s\+$', '', '')
+  endif
 endfunction
 
 function! whatif#printer#Finished() dict abort
