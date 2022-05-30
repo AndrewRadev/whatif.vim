@@ -23,7 +23,15 @@ function whatif#printer#Print(line) dict abort
   let line_description = s:FormatLine(a:line)
   let output = printf(self.command, "\"Whatif " . self.index . ': ' . line_description . '"')
 
-  call append(self.current_lineno, output)
+  let command_pattern = printf(self.command, '"Whatif \d\+.*')
+  if getline(self.current_lineno + 1) =~ '^\s*' . command_pattern
+    " There's already a print statement here, replace it
+    call setline(self.current_lineno + 1, output)
+  else
+    call append(self.current_lineno, output)
+    let self.end_lineno += 1
+  endif
+
   let self.current_lineno += 1
   let saved_view = winsaveview()
   exe self.current_lineno
@@ -31,7 +39,6 @@ function whatif#printer#Print(line) dict abort
   call winrestview(saved_view)
   let self.index += 1
   let self.current_lineno += 1
-  let self.end_lineno += 1
 endfunction
 
 function! s:FormatLine(line) abort

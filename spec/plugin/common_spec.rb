@@ -21,7 +21,6 @@ describe "Common behaviour/issues" do
       }
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -37,6 +36,36 @@ describe "Common behaviour/issues" do
         console.log("bar")
       } else {
         console.log("Whatif 4: else")
+        console.log("baz")
+      }
+    EOF
+  end
+
+  it "doesn't double up print statements, fills in the gaps and renumbers" do
+    set_file_contents <<~EOF
+      if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo")
+      } else if (other) {
+        console.log("bar")
+      } else {
+        console.log("Whatif 2: else")
+        console.log("baz")
+      }
+    EOF
+
+    vim.command 'Whatif'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo")
+      } else if (other) {
+        console.log("Whatif 2: else if (other)")
+        console.log("bar")
+      } else {
+        console.log("Whatif 3: else")
         console.log("baz")
       }
     EOF
