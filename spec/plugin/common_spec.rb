@@ -70,4 +70,30 @@ describe "Common behaviour/issues" do
       }
     EOF
   end
+
+  it "works with limited ranges" do
+    set_file_contents <<~EOF
+      if (condition) {
+        console.log("foo")
+      } else if (other) {
+        console.log("bar")
+      } else {
+        console.log("baz")
+      }
+    EOF
+
+    vim.command '3,4Whatif'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if (condition) {
+        console.log("foo")
+      } else if (other) {
+        console.log("Whatif 1: else if (other)")
+        console.log("bar")
+      } else {
+        console.log("baz")
+      }
+    EOF
+  end
 end
