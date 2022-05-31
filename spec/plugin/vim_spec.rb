@@ -19,7 +19,6 @@ describe "Vim" do
       endif
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -36,7 +35,6 @@ describe "Vim" do
       endif
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif!'
     vim.write
 
@@ -65,7 +63,6 @@ describe "Vim" do
       endif
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -97,7 +94,6 @@ describe "Vim" do
       endif
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 

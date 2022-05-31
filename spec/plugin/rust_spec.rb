@@ -19,7 +19,6 @@ describe "Rust" do
       }
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -36,7 +35,6 @@ describe "Rust" do
       }
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif!'
     vim.write
 
@@ -64,7 +62,6 @@ describe "Rust" do
       }
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 

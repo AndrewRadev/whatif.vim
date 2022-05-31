@@ -18,7 +18,6 @@ describe "Ruby" do
       end
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -35,7 +34,6 @@ describe "Ruby" do
       end
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif!'
     vim.write
 
@@ -59,7 +57,6 @@ describe "Ruby" do
 
     vim.command "let g:whatif_truncate = #{"if cond".length}"
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -85,7 +82,6 @@ describe "Ruby" do
       end
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -117,7 +113,6 @@ describe "Ruby" do
       end
     EOF
 
-    vim.search 'condition'
     vim.command 'Whatif'
     vim.write
 
@@ -129,6 +124,33 @@ describe "Ruby" do
         2 + 2 == 4
         puts "Whatif 2: elsif 1 + 1 == 2 &&"
         puts "bar"
+      end
+    EOF
+  end
+
+  it "handles one-line return if/unless" do
+    set_file_contents <<~EOF
+      def foo
+        return if one?
+        return unless two?
+        return example if three?
+        return example unless four?
+      end
+    EOF
+
+    vim.command 'Whatif'
+    vim.write
+
+    assert_file_contents <<~EOF
+      def foo
+        return if one?
+        puts "Whatif 1: return if one?"
+        return unless two?
+        puts "Whatif 2: return unless two?"
+        return example if three?
+        puts "Whatif 3: return example if th..."
+        return example unless four?
+        puts "Whatif 4: return example unles..."
       end
     EOF
   end
