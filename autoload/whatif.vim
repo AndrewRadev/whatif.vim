@@ -1,13 +1,14 @@
 function! whatif#Run(bang, start_line, end_line)
   let filetypes = split(&filetype, '\.')
 
-  if index(filetypes, 'ruby') >= 0
-    call whatif#ruby#Run(a:bang, a:start_line, a:end_line)
-  elseif index(filetypes, 'vim') >= 0
-    call whatif#vim#Run(a:bang, a:start_line, a:end_line)
-  else
-    call whatif#curly#Run(a:bang, a:start_line, a:end_line)
-  endif
+  for supported_filetype in ['vim', 'ruby', 'python']
+    if index(filetypes, supported_filetype) >= 0
+      call call('whatif#' . supported_filetype . '#Run', [a:bang, a:start_line, a:end_line])
+      return
+    endif
+  endfor
+
+  call whatif#curly#Run(a:bang, a:start_line, a:end_line)
 endfunction
 
 function! whatif#Undo(command)
