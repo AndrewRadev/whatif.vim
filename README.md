@@ -1,5 +1,7 @@
 [![Build Status](https://circleci.com/gh/AndrewRadev/whatif.vim/tree/main.svg?style=shield)](https://circleci.com/gh/AndrewRadev/whatif.vim?branch=main)
 
+![Demo](http://i.andrewradev.com/56339bb09b9093b9463a8abbbfe37b7a.gif)
+
 ## Usage
 
 The plugin has one entry point, the `:Whatif` command, which goes over all the lines in the buffer and attempts to add debug lines to if-clauses, and their branches. A javascript example:
