@@ -11,9 +11,9 @@ function! whatif#Run(bang, start_line, end_line)
   call whatif#curly#Run(a:bang, a:start_line, a:end_line)
 endfunction
 
-function! whatif#Undo(command)
+function! whatif#Undo(command, start_line, end_line)
   let command_pattern = printf(a:command, '["'']Whatif \d\+.*')
   let saved_view = winsaveview()
-  keeppatterns exe 'g/^\s*' . command_pattern . '/d'
+  keeppatterns exe a:start_line . ',' . a:end_line . 'g/^\s*' . command_pattern . '/d'
   call winrestview(saved_view)
 endfunction

@@ -6,7 +6,7 @@ function! whatif#ruby#Run(bang, start_line, end_line) abort
   let command = get(b:, 'whatif_command', 'puts %s')
 
   if a:bang == '!'
-    call whatif#Undo(command)
+    call whatif#Undo(command, a:start_line, a:end_line)
     return
   endif
 

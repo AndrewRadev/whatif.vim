@@ -96,4 +96,33 @@ describe "Common behaviour/issues" do
       }
     EOF
   end
+
+  it "can undo limited ranges" do
+    set_file_contents <<~EOF
+      if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo")
+      } else if (other) {
+        console.log("Whatif 2: else if (other)")
+        console.log("bar")
+      } else {
+        console.log("Whatif 3: else")
+        console.log("baz")
+      }
+    EOF
+
+    vim.command '1,7Whatif!'
+    vim.write
+
+    assert_file_contents <<~EOF
+      if (condition) {
+        console.log("foo")
+      } else if (other) {
+        console.log("bar")
+      } else {
+        console.log("Whatif 3: else")
+        console.log("baz")
+      }
+    EOF
+  end
 end

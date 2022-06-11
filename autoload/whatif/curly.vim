@@ -7,7 +7,7 @@ function! whatif#curly#Run(bang, start_line, end_line) abort
   let command = b:whatif_command
 
   if a:bang == '!'
-    call whatif#Undo(command)
+    call whatif#Undo(command, a:start_line, a:end_line)
     return
   endif
 
