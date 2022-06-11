@@ -7,7 +7,7 @@ describe "Python" do
     vim.command 'let g:whatif_truncate = 20'
   end
 
-  it "adds and removes puts statements in a simple case" do
+  it "adds and removes print statements in a simple case" do
     set_file_contents <<~EOF
       if condition:
           print("foo")
