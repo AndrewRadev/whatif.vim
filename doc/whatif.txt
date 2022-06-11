@@ -1,17 +1,18 @@
-*whatif.txt*	TODO
+*whatif.txt*	Add print statements to if/else branches for debugging
 
 ==============================================================================
-CONTENTS                                        *whatif*   *whatif-contents*
+CONTENTS                                              *whatif*   *whatif-contents*
 
     Installation................................: |whatif-installation|
     Usage.......................................: |whatif-usage|
+    Extending...................................: |whatif-extending|
     Settings....................................: |whatif-settings|
     Internals...................................: |whatif-internals|
     Issues......................................: |whatif-issues|
 
 
 ==============================================================================
-INSTALLATION                                            *whatif-installation*
+INSTALLATION                                               *whatif-installation*
 
 The easiest way to install the plugin is with a plugin manager:
 
@@ -43,24 +44,157 @@ https://github.com/AndrewRadev/whatif.vim/releases.
 
 
 ==============================================================================
-USAGE                                                          *whatif-usage*
+USAGE                                                             *whatif-usage*
 
-TODO
+The plugin has one entry point, the `:Whatif` command, which goes over all the
+lines in the buffer and attempts to add debug lines to if-clauses, and their
+branches. A javascript example:
+>
+    if (condition) {
+        console.log("foo")
+    } else {
+        console.log("baz")
+    }
+<
+Executing `:Whatif` in the buffer will turn it into the following:
+>
+    if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo")
+    } else {
+        console.log("Whatif 2: else")
+        console.log("baz")
+    }
+<
+Once the debugging session is done, you can execute `:Whatif!`, with a `!` at
+the end, to delete all of the debug statements in the buffer. Bear in mind
+that this command essentially just executes a |:global| operation that deletes
+all lines with this pattern, so if you copy a debug statement, or write one
+manually for some reason, it'll be deleted as well.
+
+It's possible to execute the `:Whatif` command on a range of lines, instead of
+operating on the whole file. This could be particularly useful with a text
+object that selects the contents of a function or something like that.
+Likewise, the command with a bang is also applicable to a range.
+
+If the command is re-run, it'll modify the buffer, but it shouldn't double the
+debug lines. The plugin checks if there's already one and whether it needs to
+update is numbering. For instance, the above example, post-whatif, could be
+changed with an if-else clause:
+>
+    if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo");
+    } else if (other_condition) {
+        console.log("bar");
+    } else {
+        console.log("Whatif 2: else")
+        console.log("baz");
+    }
+<
+Running another `:Whatif` at this point will add the missing one and renumber
+the ones afterwards:
+>
+    if (condition) {
+        console.log("Whatif 1: if (condition)")
+        console.log("foo");
+    } else if (other_condition) {
+        console.log("Whatif 2: else if (other_condi...")
+        console.log("bar");
+    } else {
+        console.log("Whatif 3: else")
+        console.log("baz");
+    }
+<
+Also note that the second debug statement truncates the preview string to a
+maximum of 20 characters. You can disable this by setting |g:whatif_truncate|
+to 0 or by changing it to whatever value you find useful. As a side note,
+notice that the curly brackets around the if/else lines are also removed,
+since they don't seem useful to the preview.
 
 
 ==============================================================================
-SETTINGS                                                    *whatif-settings*
+EXTENDING                                                     *whatif-extending*
 
-TODO
+The plugin is fairly basic and only has support for a few filetypes.
+Currently, the list is:
+
+- Javascript (and variants like typescript and JSX)
+- Python
+- Ruby
+- Rust
+- Vimscript
+
+If you need support for a language with curly brackets, like Java, C++, etc,
+it should be enough to set the |b:whatif_command| variable to a template
+string like "System.out.println(%s)". See below for more information on
+|b:whatif_command|.
+
+If you'd like to have support for a different kind of filetype, please open an
+issue suggesting:
+
+- Examples for if-clauses, match/switch statements etc. in this language
+- What a "print statement" looks like (what |b:whatif_command| ought to
+  default to)
+
+I'd also be happy to add defaults for |b:whatif_command| for curly-bracket
+languages -- the only reason I don't have any is I don't write a lot of them
+other than Rust and Javascript.
 
 
 ==============================================================================
-INTERNALS                                                  *whatif-internals*
+SETTINGS                                                       *whatif-settings*
 
-TODO
+                                                             *g:whatif_truncate*
+>
+    let g:whatif_truncate = 10
+<
+Default value: 20
+
+The maximum character limit for the contents of the preview string after the
+"Whatif N: " text. Will add "..." if the string ends up truncated. Set to 0 to
+avoid truncating altogether.
+
+                                                              *b:whatif_command*
+>
+    let b:whatif_command = 'System.out.println(%s)'
+<
+Default value: Depends on the filetype
+
+The buffer-local "command" variable holds the template for the print command
+that will be printed to the buffer. The `%s` designates where the debug string
+goes. Note that there's no quotes in the example, the plugin adds its own
+quotes, escaping and all.
+
+This might, in the future, turn out to be too limited of a method to handle
+this kind of configuration, so be aware it might change at some point. It's
+hard to tell what the use cases will be, though -- if you're trying to add a
+specific kind of debug statement, consider opening a github issue to explain
+the scenario.
+
 
 ==============================================================================
-ISSUES                                                        *whatif-issues*
+INTERNALS                                                     *whatif-internals*
+
+The plugin is not, at this time, particularly sophisticated. It boils down to
+looping over the range and checking for if-like regexes. It won't work for
+most single-line if-clauses either, because it would have to change the
+expression rather than adding a line, and that's more complicated.
+
+Each individual filetype handler is located in
+`autoload/whatif/<filetype>.vim`. There's a catch-all "curly" handler which
+can be used for curly-bracket languages like C, Java, etc, but I can't say how
+well it works for all cases.
+
+The common code that iterates over lines, adjusts start/end lines, and formats
+the debug statements is located in `autoload/whatif/printer.vim`. If you're
+interested in writing support for a new filetype, you can inspect it to see
+what tools you have to work with, but it's recommended to copy an existing
+filetype callback and adjust it.
+
+
+==============================================================================
+ISSUES                                                           *whatif-issues*
 
 Any issues and suggestions are very welcome on the github bugtracker:
 https://github.com/AndrewRadev/whatif.vim/issues
