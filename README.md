@@ -1,6 +1,6 @@
 [![Build Status](https://circleci.com/gh/AndrewRadev/whatif.vim/tree/main.svg?style=shield)](https://circleci.com/gh/AndrewRadev/whatif.vim?branch=main)
 
-![Demo](http://i.andrewradev.com/56339bb09b9093b9463a8abbbfe37b7a.gif)
+![Demo](http://i.andrewradev.com/172f424a4ba0aea438395571d176a4a4.gif)
 
 ## Usage
 
