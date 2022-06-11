@@ -81,4 +81,28 @@ describe "Rust" do
       }
     EOF
   end
+
+  it "handles block-form match statements" do
+    set_file_contents <<~EOF
+      match Some("foo") {
+          Some(foo) => {
+              println!("{}", foo);
+          },
+          None => println!("None"),
+      }
+    EOF
+
+    vim.command 'Whatif'
+    vim.write
+
+    assert_file_contents <<~EOF
+      match Some("foo") {
+          Some(foo) => {
+              println!("Whatif 1: Some(foo) =>");
+              println!("{}", foo);
+          },
+          None => println!("None"),
+      }
+    EOF
+  end
 end

@@ -1,7 +1,7 @@
 function! whatif#Run(bang, start_line, end_line)
   let filetypes = split(&filetype, '\.')
 
-  for supported_filetype in ['vim', 'ruby', 'python']
+  for supported_filetype in ['vim', 'ruby', 'python', 'rust']
     if index(filetypes, supported_filetype) >= 0
       call call('whatif#' . supported_filetype . '#Run', [a:bang, a:start_line, a:end_line])
       return
